@@ -50,19 +50,23 @@
         android:textSize="50sp" />
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/back"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:divider="@drawable/diviedr"
+        android:showDividers="middle">
 
 
         <EditText
             android:layout_width="300dp"
             android:layout_height="60dp"
+            android:id="@+id/register_email"
             android:background="@drawable/edittext_back"
             android:fontFamily="@font/family_grace"
-            android:hint="EMAIL ID"
+            android:hint="Email ID"
             android:paddingLeft="20dp"
             android:textColorHint="#000000"
             android:textSize="22sp" />
@@ -70,6 +74,7 @@
         <EditText
             android:layout_width="300dp"
             android:layout_height="60dp"
+            android:id="@+id/register_password"
             android:background="@drawable/edittext_back"
             android:fontFamily="@font/family_grace"
             android:hint="Password"
@@ -80,6 +85,7 @@
         <EditText
             android:layout_width="300dp"
             android:layout_height="60dp"
+            android:id="@+id/register_confirm_paspassword"
             android:background="@drawable/edittext_back"
             android:fontFamily="@font/family_grace"
             android:hint="Confirm Password"
@@ -93,6 +99,7 @@
             android:background="@drawable/edittext_back"
             android:fontFamily="@font/family_grace"
             android:hint="Address"
+            android:id="@+id/register_address"
             android:paddingLeft="20dp"
             android:textColorHint="#000000"
             android:textSize="22sp" />
@@ -104,6 +111,21 @@
             android:hint="Emergency Contact"
             android:paddingLeft="20dp"
             android:textColorHint="#000000"
+            android:id="@+id/register_contact"
             android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_marginTop="20dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_back"
+            android:text="Continue"
+            android:textColor="#000000"
+            android:textAllCaps="false"
+            android:fontFamily="@font/family_grace"
+            android:textSize="30sp"
+            />
     </LinearLayout>
+
 </RelativeLayout>

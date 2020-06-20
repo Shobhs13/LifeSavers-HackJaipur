@@ -2,4 +2,6 @@
     <string name="app_name">Lifesaver</string>
     <string name="com_auth0_client_id">yRaAe44v4pHw59YpIRXuMe5iXKnlD0i4</string>
     <string name="com_auth0_domain">dev-lvynb9s5.eu.auth0.com</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
 </resources>
