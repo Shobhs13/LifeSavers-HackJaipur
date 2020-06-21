@@ -23,6 +23,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -32,6 +41,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Double latitude, longitude;
 
     SharedPreferences prefs;
+
+    Map<String, Map<String, Double>> mapList, allList;
+
+    public static double distance(double lat1,
+                                  double lat2, double lon1,
+                                  double lon2) {
+
+        // The math module contains a function
+        // named toRadians which converts from
+        // degrees to radians.
+        lon1 = Math.toRadians(lon1);
+        lon2 = Math.toRadians(lon2);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        // Haversine formula
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.pow(Math.sin(dlon / 2), 2);
+
+        double c = 2 * Math.asin(Math.sqrt(a));
+
+        // Radius of earth in kilometers. Use 3956
+        // for miles
+        double r = 6371;
+
+        // calculate the result
+        return (c * r);
+    }
+
+    private void showmarkers() {
+
+        for(String key : mapList.keySet()) {
+            LatLng hospital = new LatLng(mapList.get(key).get("Latitude"), mapList.get(key).get("Longitude"));
+
+            mMap.addMarker(new MarkerOptions().position(hospital).title("Hospital marker"));
+
+        }
+
+        float zoomLevel = 15.0f;
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoomLevel));
+
+
+    }
 
     public void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -95,6 +151,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        mapList = new HashMap<>();
+        allList = new HashMap<>();
+
 
     }
 
@@ -120,6 +179,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));
+
+            //add find hospital code here
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Location");
+            ref.orderByChild("Latitude").startAt(latitude - 0.009009).endAt(latitude + 0.009009).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Log.i("TAG", "onDataChange: " + snapshot.getValue());
+
+                    Map<String, Map<String, Double>> map = (HashMap)snapshot.getValue();
+
+                    for(String key : map.keySet()) {
+                        Double lat2 = map.get(key).get("Latitude");
+                        Double lon2 = map.get(key).get("Longitude");
+                        if (distance(latitude, longitude, lat2, lon2) < 1) {
+
+                            Map<String, Double> subMap = new HashMap<>();
+                            subMap.put("Latitude", lat2);
+                            subMap.put("Longitude", lon2);
+                            allList.put(key, subMap);
+                            mapList.put(key, subMap);
+
+                        }
+
+                    }
+
+                    showmarkers();
+                }
+
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         }, 2000);
+
+
     }
 }
