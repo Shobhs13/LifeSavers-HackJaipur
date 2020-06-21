@@ -13,6 +13,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,6 +43,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Double latitude, longitude;
 
     SharedPreferences prefs;
+
+    FloatingActionButton fab;
 
     Map<String, Map<String, Double>> mapList, allList;
 
@@ -76,9 +80,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void showmarkers() {
 
         for(String key : mapList.keySet()) {
+
+            Log.i("TAG", "showmarkers: " + mapList);
             LatLng hospital = new LatLng(mapList.get(key).get("Latitude"), mapList.get(key).get("Longitude"));
 
             mMap.addMarker(new MarkerOptions().position(hospital).title("Hospital marker"));
+            Log.i("TAG", "showmarkers: " + "Markers set!");
 
         }
 
@@ -149,6 +156,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE);
 
+        fab = findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new Handler().postDelayed(() -> {
+                    startActivity(new Intent(MapsActivity.this, HospitalListActivity.class));
+                },1000);
+            }
+        });
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         mapList = new HashMap<>();
@@ -177,7 +196,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng sydney = new LatLng(latitude, longitude);
             float zoomLevel = 16.0f; //This goes up to 21
 
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//hindon
+            LatLng h1 = new LatLng(28.6895944, 77.368601);
+            mMap.addMarker(new MarkerOptions().position(h1).title("Hindon Air Force Hospital\nTreats COVID-19\nAvailable Beds: 26"));
+
+            h1 = new LatLng(28.686185, 77.370286);
+            mMap.addMarker(new MarkerOptions().position(h1).title("Marker in Sydney"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));
 
             //add find hospital code here
@@ -193,19 +217,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     for(String key : map.keySet()) {
                         Double lat2 = map.get(key).get("Latitude");
                         Double lon2 = map.get(key).get("Longitude");
-                        if (distance(latitude, longitude, lat2, lon2) < 1) {
 
-                            Map<String, Double> subMap = new HashMap<>();
-                            subMap.put("Latitude", lat2);
-                            subMap.put("Longitude", lon2);
-                            allList.put(key, subMap);
-                            mapList.put(key, subMap);
+                        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("Hospitals/" + key + "/");
+                        ref2.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        }
+                                Log.i("TAG", "onDataChange: " + "distance: " + distance(latitude, longitude, lat2, lon2));
+                                if (distance(latitude, longitude, lat2, lon2) < 1000) {
+
+                                    Map<String, Double> subMap = new HashMap<>();
+                                    subMap.put("Latitude", lat2);
+                                    subMap.put("Longitude", lon2);
+                                    allList.put(key, subMap);
+                                    mapList.put(key, subMap);
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
 
                     }
 
+                    Log.i("TAG", "#######################onDataChange: " + "Calling showmarkers()" + "maplist: " + mapList);
                     showmarkers();
+
+
                 }
 
 
