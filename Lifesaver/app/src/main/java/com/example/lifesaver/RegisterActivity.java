@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,6 +20,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     Button registerButton;
     EditText email, password, confirmPassword, address, number;
+    TextView login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.register_password);
         confirmPassword = findViewById(R.id.register_confirm_paspassword);
         number = findViewById(R.id.register_contact);
+        login = findViewById(R.id.register_login);
 
 
         registerButton.setOnClickListener( view -> {
@@ -43,6 +47,13 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             });
 
+        });
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            }
         });
 
 

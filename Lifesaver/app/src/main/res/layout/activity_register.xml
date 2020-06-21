@@ -50,82 +50,103 @@
         android:textSize="50sp" />
 
     <LinearLayout
-        android:layout_marginTop="10dp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/back"
+        android:layout_marginTop="10dp"
+        android:divider="@drawable/diviedr"
         android:gravity="center"
         android:orientation="vertical"
-        android:divider="@drawable/diviedr"
         android:showDividers="middle">
 
 
         <EditText
+            android:id="@+id/register_email"
+
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:id="@+id/register_email"
             android:background="@drawable/edittext_back"
             android:fontFamily="@font/family_grace"
             android:hint="Email ID"
             android:paddingLeft="20dp"
+            android:textColor="#000000"
             android:textColorHint="#000000"
             android:textSize="22sp" />
 
         <EditText
+            android:id="@+id/register_password"
+
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:id="@+id/register_password"
             android:background="@drawable/edittext_back"
             android:fontFamily="@font/family_grace"
             android:hint="Password"
             android:paddingLeft="20dp"
+            android:textColor="#000000"
             android:textColorHint="#000000"
             android:textSize="22sp" />
 
         <EditText
+            android:id="@+id/register_confirm_paspassword"
+
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:id="@+id/register_confirm_paspassword"
             android:background="@drawable/edittext_back"
             android:fontFamily="@font/family_grace"
             android:hint="Confirm Password"
             android:paddingLeft="20dp"
+            android:textColor="#000000"
             android:textColorHint="#000000"
             android:textSize="22sp" />
 
         <EditText
+            android:id="@+id/register_address"
+
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:background="@drawable/edittext_back"
             android:fontFamily="@font/family_grace"
             android:hint="Address"
-            android:id="@+id/register_address"
             android:paddingLeft="20dp"
+            android:textColor="#000000"
             android:textColorHint="#000000"
             android:textSize="22sp" />
+
         <EditText
+            android:id="@+id/register_contact"
+
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:background="@drawable/edittext_back"
             android:fontFamily="@font/family_grace"
             android:hint="Emergency Contact"
             android:paddingLeft="20dp"
+            android:textColor="#000000"
             android:textColorHint="#000000"
-            android:id="@+id/register_contact"
             android:textSize="22sp" />
 
         <Button
             android:id="@+id/register_button"
-            android:layout_marginTop="20dp"
             android:layout_width="200dp"
             android:layout_height="50dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/button_back"
-            android:text="Continue"
-            android:textColor="#000000"
-            android:textAllCaps="false"
             android:fontFamily="@font/family_grace"
-            android:textSize="30sp"
-            />
+            android:text="Continue"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textSize="30sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/register_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="Log In"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
 
 </RelativeLayout>

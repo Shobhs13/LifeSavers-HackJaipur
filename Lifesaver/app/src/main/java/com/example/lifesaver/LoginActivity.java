@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Button button;
     EditText email, password, confirmPassword;
+    TextView register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,19 +31,25 @@ public class LoginActivity extends AppCompatActivity {
         email = findViewById(R.id.login_email);
         password = findViewById(R.id.login_password);
         confirmPassword = findViewById(R.id.login_confirm_paspassword);
+        register = findViewById(R.id.login_register);
 
         button.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(!task.isSuccessful()) {
+                    if (!task.isSuccessful()) {
                         Toast.makeText(LoginActivity.this, "Login Failed.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     }
-
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
             });
 
+        });
+
+
+        register.setOnClickListener(view -> {
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
 
 

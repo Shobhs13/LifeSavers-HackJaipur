@@ -5,10 +5,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -25,6 +29,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
 
     private FusedLocationProviderClient fusedLocationClient;
+    private Double latitude, longitude;
+
+    SharedPreferences prefs;
 
     public void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -37,19 +44,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             shouldShowRequestPermissionRationale("The app uses your current location to find hospitals near you. Allow the app to use this feature to find available hospitals near you.");
 
-            requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
-        }
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            // Logic to handle location object
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            mMap.setMyLocationEnabled(true);
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                // Logic to handle location object
+
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString("latitude", String.valueOf(location.getLatitude()));
+                                editor.putString("longitude", String.valueOf(location.getLongitude()));
+                                editor.apply();
+                                Log.i("TAG", "onSuccess:############################ " + location.getLatitude() + " " + location.getLongitude());
+                            }
                         }
-                    }
-                });
+                    });
+        }
 
     }
 
@@ -57,9 +74,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == 1){
-            if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
+        if (requestCode == 1) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 startActivity(new Intent(MapsActivity.this, MainActivity.class));
+            } else {
+                getLocation();
             }
         }
     }
@@ -72,8 +91,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
 
     }
 
@@ -89,10 +110,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        getLocation();
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        new Handler().postDelayed(() -> {
+
+            LatLng sydney = new LatLng(latitude, longitude);
+            float zoomLevel = 16.0f; //This goes up to 21
+
+            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, zoomLevel));
+        }, 2000);
     }
 }

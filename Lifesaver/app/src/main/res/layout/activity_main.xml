@@ -68,8 +68,8 @@
             android:background="@drawable/button_back"
             android:fontFamily="@font/family_grace"
             android:text="About Patients"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
             android:textColorHint="#000000"
             android:textAllCaps="false"
             android:textSize="28.7sp" />
