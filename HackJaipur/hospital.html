@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <!-- The core Firebase JS SDK is always required and must be listed first -->
 </head>
 
@@ -23,7 +26,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="index.html"> <img src="img/logo.jpg" alt="logo"> </a>
+                        <a class="navbar-brand" href="index.html"> <img src="img/logo.png" alt="logo"> </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -43,9 +46,6 @@
                                     <a class="nav-link" href="hospital.html"> </a>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="login.html" id="navbarDropdown_1"
-                                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                         
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown_1">
                                         <a class="dropdown-item" href="login.html"></a>
@@ -78,45 +78,96 @@
             </div>
         </div>
     </section>
-     
-<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
-<!-- Add additional services you want to use -->
-<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-functions.js"></script>
-<!-- Comment out (or don't include) services you don't want to use -->
-<!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-storage.js"></script> -->
-
-<script>
- var firebase = require("firebase/app");
-// Add additional services you want to use
- require("firebase/auth");
- require("firebase/database");
- require("firebase/functions");
-// Comment out (or don't require) services you don't want to use
-// require("firebase/storage");
-var config = {
-
-    apiKey: "AIzaSyB3nDviElVGYksOkRl0BCUw2C386eGsraw",
-     authDomain: "lifesaver-b170d.firebaseapp.com",
-     databaseURL: "https://lifesaver-b170d.firebaseio.com",
-     projectId: "lifesaver-b170d",
-     storageBucket: "lifesaver-b170d.appspot.com",
-     messagingSenderId: "293632693174",
-     appId: "1:293632693174:web:045dffb5f431659fb4e717",
-     measurementId: "G-2CR67178G2"
-  
-};
-firebase.initializeApp(config);
-
-const preObject = document.getElementById('object');
  
-const dbRefObject = firebase.database().ref().child('object');
-
-dbRefObject.on('value', snap => console.log(snap.value()));
-
-</script>
-
-</body>
+  <div class="container">
+   <div class="table-responsive">
+    <h1 align="center"></h1>
+    <br />
+    <div align="center">
+    <p>
+     <button type="button" name="Live_data" id="Live_data" class="btn_2 d-none d-lg-block">Load Data for Covid Hospitals</button>
+    </p>
+    <p>
+     <button type="button" name="Live_datanon" id="Live_datanon" class="btn_2 d-none d-lg-block">Load Data for Non-Covid Hospitals</button>
+    </p>
+    </div>
+    <br />
+    <div id="dataset">
+    </div>
+   </div>
+  </div>
+ </body>
 </html>
 
+<script>
+$(document).ready(function(){
+ $('#Live_data').click(function(){
+  $.ajax({
+   url:"dataset.csv",
+   dataType:"text",
+   success:function(data)
+   {
+    var employee_data = data.split(/\r?\n|\r/);
+    var table_data = '<table class="table table-bordered table-striped">';
+    for(var count = 0; count<employee_data.length; count++)
+    {
+     var cell_data = employee_data[count].split(",");
+     table_data += '<tr>';
+     for(var cell_count=0; cell_count<cell_data.length; cell_count++)
+     {
+      if(count === 0)
+      {
+       table_data += '<th>'+cell_data[cell_count]+'</th>';
+      }
+      else
+      {
+       table_data += '<td>'+cell_data[cell_count]+'</td>';
+      }
+     }
+     table_data += '</tr>';
+    }
+    table_data += '</table>';
+    $('#dataset').html(table_data);
+   }
+  });
+ });
+ 
+});
+</script>
+
+
+<script>
+    $(document).ready(function(){
+     $('#Live_datanon').click(function(){
+      $.ajax({
+       url:"datasetnon.csv",
+       dataType:"text",
+       success:function(data)
+       {
+        var employee_data = data.split(/\r?\n|\r/);
+        var table_data = '<table class="table table-bordered table-striped">';
+        for(var count = 0; count<employee_data.length; count++)
+        {
+         var cell_data = employee_data[count].split(",");
+         table_data += '<tr>';
+         for(var cell_count=0; cell_count<cell_data.length; cell_count++)
+         {
+          if(count === 0)
+          {
+           table_data += '<th>'+cell_data[cell_count]+'</th>';
+          }
+          else
+          {
+           table_data += '<td>'+cell_data[cell_count]+'</td>';
+          }
+         }
+         table_data += '</tr>';
+        }
+        table_data += '</table>';
+        $('#dataset').html(table_data);
+       }
+      });
+     });
+     
+    });
+    </script>
