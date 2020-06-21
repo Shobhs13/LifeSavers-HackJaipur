@@ -27,5 +27,22 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, MapsActivity.class));
             }
         });
+
+        sos = findViewById(R.id.home_sos);
+        patients = findViewById(R.id.home_patients);
+
+        sos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SOSActivity.class));
+            }
+        });
+
+        patients.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, PatientsActivity.class));
+            }
+        });
     }
 }
