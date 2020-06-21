@@ -1,1 +1,122 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>LifeSavers</title>
+    <link rel="icon" href="img/favicon.jpg">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+</head>
+
+
+<body>
+    <header class="main_menu home_menu">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <a class="navbar-brand" href="index.html"> <img src="img/logo.jpg" alt="logo"> </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse main-menu-item justify-content-center"
+                            id="navbarSupportedContent">
+                            <ul class="navbar-nav align-items-center">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="index.html"></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="about.html"></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="hospital.html"> </a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="login.html" id="navbarDropdown_1"
+                                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                         
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown_1">
+                                        <a class="dropdown-item" href="login.html"></a>
+                                        <a class="dropdown-item" href="signup.html"></a>
+                                    </div>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="contact.html"></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <a class="btn_2 d-none d-lg-block" href="index.html">Home</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="breadcrumb_part breadcrumb_bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb_iner">
+                        <div class="breadcrumb_iner_item">
+                            <h2>Live Hospital Data</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+     
+<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+<!-- Add additional services you want to use -->
+<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-functions.js"></script>
+<!-- Comment out (or don't include) services you don't want to use -->
+<!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-storage.js"></script> -->
+
+<script>
+ var firebase = require("firebase/app");
+// Add additional services you want to use
+ require("firebase/auth");
+ require("firebase/database");
+ require("firebase/functions");
+// Comment out (or don't require) services you don't want to use
+// require("firebase/storage");
+var config = {
+
+    apiKey: "AIzaSyB3nDviElVGYksOkRl0BCUw2C386eGsraw",
+     authDomain: "lifesaver-b170d.firebaseapp.com",
+     databaseURL: "https://lifesaver-b170d.firebaseio.com",
+     projectId: "lifesaver-b170d",
+     storageBucket: "lifesaver-b170d.appspot.com",
+     messagingSenderId: "293632693174",
+     appId: "1:293632693174:web:045dffb5f431659fb4e717",
+     measurementId: "G-2CR67178G2"
+  
+};
+firebase.initializeApp(config);
+
+const preObject = document.getElementById('object');
+ 
+const dbRefObject = firebase.database().ref().child('object');
+
+dbRefObject.on('value', snap => console.log(snap.value()));
+
+</script>
+
+</body>
+</html>
 
